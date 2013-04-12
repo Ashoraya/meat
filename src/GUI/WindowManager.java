@@ -8,10 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
 
-/**
- *
- * @author Ashoraya
- */
+
 public class WindowManager {
     private static Map<Integer, JFrame> allwins = new HashMap<Integer, JFrame>();
 

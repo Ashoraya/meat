@@ -10,11 +10,15 @@
  */
 package GUI;
 
+import Core.ProfileRepository;
+
 /**
  *
  * @author Ashoraya
  */
 public class StudyProblemsUI extends javax.swing.JFrame {
+    
+    public ProfileRepository profiles;
 
     /** Creates new form StudyProblemsUI */
     public StudyProblemsUI() {
@@ -115,7 +119,8 @@ public class StudyProblemsUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-525)/2, (screenSize.height-471)/2, 525, 471);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed

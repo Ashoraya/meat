@@ -9,16 +9,72 @@
  * Created on Apr 5, 2013, 10:22:00 PM
  */
 package GUI;
+import Core.HomeworkAssignment;
+import Core.HomeworkProblem;
+import Core.Operator;
+import Core.ProfileRepository;
+import java.awt.Font;
+import java.util.Random;
 
 /**
  *
  * @author Ashoraya
  */
 public class HomeworkProblemsUI extends javax.swing.JFrame {
+    
+    public ProfileRepository profiles;
 
     /** Creates new form HomeworkProblemsUI */
     public HomeworkProblemsUI() {
         initComponents();
+        questionLabel.setFont(new Font("Serif", Font.PLAIN, 32));
+        answerOneButton.setFont(new Font("Serif", Font.PLAIN, 32));
+        answerTwoButton.setFont(new Font("Serif", Font.PLAIN, 32));
+        answerThreeButton.setFont(new Font("Serif", Font.PLAIN, 32));
+        answerFourButton.setFont(new Font("Serif", Font.PLAIN, 32));
+        Random rand = new Random();
+        HomeworkAssignment assignment = new HomeworkAssignment();
+        assignment.createHomeworkAssignment(1, 10, 0, 12, true, false, true, false);
+        assignment.generateRandomHomeworkProblems();
+        HomeworkProblem problem = assignment.getHomeworkProblems().get(0);
+        int correctAnswerButton = rand.nextInt(4) + 1;
+        switch(correctAnswerButton)
+        {
+            case 1:
+                answerOneButton.setText(Integer.toString(problem.getCorrectAnswer()));
+                break;
+            case 2:
+                answerTwoButton.setText(Integer.toString(problem.getCorrectAnswer()));
+                break;
+            case 3:
+                answerThreeButton.setText(Integer.toString(problem.getCorrectAnswer()));
+                break;
+            case 4:
+                answerFourButton.setText(Integer.toString(problem.getCorrectAnswer()));
+                break;
+        }
+        
+        Operator operator = problem.getOperator();
+        switch(operator)
+        {
+            case ADD:
+                //this.operator.setText("+");
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " + " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case SUBTRACT:
+                //this.operator.setText("-");
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " - " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case MULTIPLY:
+                //this.operator.setText("*");
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " * " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case DIVIDE:
+                //this.operator.setText("/");
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " \u00F7 " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+        }
+        //jPanel1.setText("Test");
     }
 
     /** This method is called from within the constructor to
@@ -34,13 +90,19 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         nextButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
         saveAndQuitButton = new javax.swing.JButton();
+        questionLabel = new javax.swing.JLabel();
+        answerTwoButton = new javax.swing.JButton();
+        answerFourButton = new javax.swing.JButton();
+        answerOneButton = new javax.swing.JButton();
+        answerThreeButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutButton = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Homework"));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -50,12 +112,16 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 377, Short.MAX_VALUE)
+            .addGap(0, 373, Short.MAX_VALUE)
         );
 
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
         nextButton.setText("Next");
+        getContentPane().add(nextButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, -1, -1));
 
         previousButton.setText("Previous");
+        getContentPane().add(previousButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, -1, -1));
 
         saveAndQuitButton.setText("Save and Quit");
         saveAndQuitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -63,6 +129,27 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
                 saveAndQuitButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(saveAndQuitButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 350, -1, -1));
+
+        questionLabel.setText("question");
+        getContentPane().add(questionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, -1, -1));
+
+        answerTwoButton.setText("answerTwo");
+        answerTwoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerTwoButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(answerTwoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 100, 90, 70));
+
+        answerFourButton.setText("answerFour");
+        getContentPane().add(answerFourButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 90, 70));
+
+        answerOneButton.setText("answerOne");
+        getContentPane().add(answerOneButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 90, 70));
+
+        answerThreeButton.setText("answerThree");
+        getContentPane().add(answerThreeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 210, 90, 70));
 
         jMenu1.setText("Options");
 
@@ -79,33 +166,8 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(previousButton)
-                .addGap(59, 59, 59)
-                .addComponent(saveAndQuitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addComponent(nextButton)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(356, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(previousButton)
-                    .addComponent(saveAndQuitButton))
-                .addContainerGap())
-        );
-
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-522)/2, (screenSize.height-448)/2, 522, 448);
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveAndQuitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAndQuitButtonActionPerformed
@@ -117,6 +179,10 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void answerTwoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerTwoButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_answerTwoButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -154,12 +220,17 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton answerFourButton;
+    private javax.swing.JButton answerOneButton;
+    private javax.swing.JButton answerThreeButton;
+    private javax.swing.JButton answerTwoButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem logoutButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
+    private javax.swing.JLabel questionLabel;
     private javax.swing.JButton saveAndQuitButton;
     // End of variables declaration//GEN-END:variables
 }

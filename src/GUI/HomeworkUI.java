@@ -10,11 +10,15 @@
  */
 package GUI;
 
+import Core.ProfileRepository;
+
 /**
  *
  * @author Ashoraya
  */
 public class HomeworkUI extends javax.swing.JFrame {
+    
+    public ProfileRepository profiles;
 
     /** Creates new form HomeworkUI */
     public HomeworkUI() {
@@ -105,7 +109,8 @@ public class HomeworkUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-651)/2, (screenSize.height-480)/2, 651, 480);
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed

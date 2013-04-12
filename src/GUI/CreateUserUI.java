@@ -10,15 +10,29 @@
  */
 package GUI;
 
+import Core.Response;
+import Core.TeacherProfile;
+import Core.StudentProfile;
+import Core.ProfileRepository;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ashoraya
  */
 public class CreateUserUI extends javax.swing.JFrame {
 
+    public ProfileRepository profiles;
+    
     /** Creates new form CreateUserUI */
     public CreateUserUI() {
         initComponents();
+        this.profiles = new ProfileRepository();
+        Response loadResponse = profiles.loadProfiles();
+        if(loadResponse.success == false)
+        {
+            System.out.println(loadResponse.failureMessage + " A new profiles save file will be created.");
+        }
     }
 
     /** This method is called from within the constructor to
@@ -30,11 +44,91 @@ public class CreateUserUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        usernameTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        firstNameTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lastNameTextField = new javax.swing.JTextField();
+        classIDLabel = new javax.swing.JLabel();
+        teacherUsernameTextField = new javax.swing.JTextField();
+        profileTypeComboBox = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        passwordTextField = new javax.swing.JPasswordField();
+        createAccountButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        usernameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTextFieldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 170, 30));
+
+        jLabel1.setText("Username");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, 10));
+
+        jLabel2.setText("Password");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, 10));
+        getContentPane().add(firstNameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 170, 30));
+
+        jLabel3.setText("First name");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, 10));
+
+        jLabel4.setText("Last name");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, -1, 10));
+        getContentPane().add(lastNameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 40, 170, 30));
+
+        classIDLabel.setText("What is your teacher's username?");
+        getContentPane().add(classIDLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, -1, -1));
+
+        teacherUsernameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                teacherUsernameTextFieldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(teacherUsernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 170, 170, 30));
+
+        profileTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Student", "Teacher" }));
+        profileTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileTypeComboBoxActionPerformed(evt);
+            }
+        });
+        getContentPane().add(profileTypeComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 170, 30));
+
+        jLabel6.setText("Are you a student of a teacher?");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, -1, -1));
+
+        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordTextFieldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(passwordTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, 170, 30));
+
+        createAccountButton.setText("Create Account");
+        createAccountButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createAccountButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(createAccountButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, 120, 30));
+
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(backButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 80, 30));
 
         jMenu1.setText("Options");
 
@@ -51,24 +145,94 @@ public class CreateUserUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
-        );
-
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-462)/2, (screenSize.height-391)/2, 462, 391);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTextFieldActionPerformed
+
+    private void profileTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileTypeComboBoxActionPerformed
+        if(this.profileTypeComboBox.getSelectedItem() == "Student")
+        {
+            this.classIDLabel.setText("What is your teacher's username?");
+            this.teacherUsernameTextField.setVisible(true);
+        }
+        else if(this.profileTypeComboBox.getSelectedItem() == "Teacher")
+        {
+            this.classIDLabel.setText("");
+            this.teacherUsernameTextField.setVisible(false);
+        }
+    }//GEN-LAST:event_profileTypeComboBoxActionPerformed
+
+    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordTextFieldActionPerformed
+
+    private void teacherUsernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teacherUsernameTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_teacherUsernameTextFieldActionPerformed
+
+    private void createAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountButtonActionPerformed
+        if(this.profileTypeComboBox.getSelectedItem() == "Student")
+        {
+            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name");
+            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name");
+            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username");
+            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password");
+            else if(this.teacherUsernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your teacher's username");
+            else if(this.profiles.teacherExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken");
+            else if(profiles.teacherExists(this.teacherUsernameTextField.getText()) == false) JOptionPane.showMessageDialog(this, "We couldn't find that teacher username. Please talk with your teacher to find his/her username");
+            else
+            {
+                String password = new String(this.passwordTextField.getPassword());
+                System.out.println("The user was created with the password: " + password);
+                StudentProfile Student = new StudentProfile(this.firstNameTextField.getText(), this.lastNameTextField.getText(), this.teacherUsernameTextField.getText(), this.usernameTextField.getText(), password);
+                System.out.println("The password gathered from the newly created student account is: " + Student.password);
+                Response addStudentResponse = this.profiles.addStudent(Student);
+                if((addStudentResponse.success == false)) JOptionPane.showMessageDialog(this, "That username has already been taken");
+                else
+                {
+                    this.profiles.storeProfiles();
+                    WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
+                    this.setVisible(false);
+                }
+            }
+        }
+        
+        else if(this.profileTypeComboBox.getSelectedItem() == "Teacher")
+        {
+            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name");
+            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name");
+            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username");
+            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password");
+            else if(this.profiles.studentExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken");
+            else
+            {
+                String password = new String(this.passwordTextField.getPassword());
+                TeacherProfile Teacher = new TeacherProfile(this.firstNameTextField.getText(), this.lastNameTextField.getText(), this.usernameTextField.getText(), password);
+                Response addTeacherResponse = this.profiles.addTeacher(Teacher);
+                if(addTeacherResponse.success == false) JOptionPane.showMessageDialog(this, "That username has already been taken");
+                else
+                {
+                    this.profiles.storeProfiles();
+                    WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
+                    this.setVisible(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_createAccountButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_backButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,8 +270,22 @@ public class CreateUserUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JLabel classIDLabel;
+    private javax.swing.JButton createAccountButton;
+    private javax.swing.JTextField firstNameTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JTextField lastNameTextField;
+    private javax.swing.JPasswordField passwordTextField;
+    private javax.swing.JComboBox profileTypeComboBox;
+    private javax.swing.JTextField teacherUsernameTextField;
+    private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 }

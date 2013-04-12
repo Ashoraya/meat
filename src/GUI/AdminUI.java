@@ -10,11 +10,15 @@
  */
 package GUI;
 
+import Core.ProfileRepository;
+
 /**
  *
  * @author Ashoraya
  */
 public class AdminUI extends javax.swing.JFrame {
+    
+    public ProfileRepository profiles;
 
     /** Creates new form AdminUI */
     public AdminUI() {
@@ -62,7 +66,8 @@ public class AdminUI extends javax.swing.JFrame {
             .addGap(0, 279, Short.MAX_VALUE)
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-416)/2, (screenSize.height-338)/2, 416, 338);
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
