@@ -11,8 +11,12 @@
 package GUI;
 
 import Core.ProfileRepository;
-import Core.AuthenticationManager;
+import Core.UserManager;
 import Core.Response;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,6 +30,21 @@ public class LoginUI extends javax.swing.JFrame {
     /** Creates new form LoginUI */
     public LoginUI() {
         initComponents();
+        
+        TextbookLoader textbookLoader = new TextbookLoader();
+        textbookLoader.start();
+        
+        //StudentProgressReportLoader reportLoader = new StudentProgressReportLoader();
+        //reportLoader.start();
+        //Allow the user to login by pressing the enter button instead of having to click the login button
+        passwordTextField.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                loginButton.doClick();
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -45,6 +64,7 @@ public class LoginUI extends javax.swing.JFrame {
         passwordTextField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MEAT - Login");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocationByPlatform(true);
         setResizable(false);
@@ -53,6 +73,11 @@ public class LoginUI extends javax.swing.JFrame {
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
+            }
+        });
+        loginButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginButtonKeyPressed(evt);
             }
         });
 
@@ -117,14 +142,25 @@ public class LoginUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String password = new String(passwordTextField.getPassword());
-        System.out.println(usernameTextField.getText());
-        System.out.println(password);
-        Response loginAttemptResponse = AuthenticationManager.instance.login(usernameTextField.getText(), password);
+       String password = new String(passwordTextField.getPassword());
+        Response loginAttemptResponse = UserManager.instance.login(usernameTextField.getText(), password);
         if(loginAttemptResponse.success == true)
         {
-            WindowManager.GetWin(WindowManager.WINDOWS.MAINSCREEN).setVisible(true);
-            this.setVisible(false);
+            if(UserManager.instance.isCurrentUserOfTypeStudentProfile() == true)
+            {
+                WindowManager.GetWin(WindowManager.WINDOWS.STUDENTMAINMENU).setVisible(true);
+                this.setVisible(false);
+                usernameTextField.setText("");
+                passwordTextField.setText("");
+            }
+            
+            else if(UserManager.instance.isCurrentUserOfTypeTeacherProfile() == true)
+            {
+                WindowManager.GetWin(WindowManager.WINDOWS.CREATEHOMEWORK).setVisible(true);
+                this.setVisible(false);
+                usernameTextField.setText("");
+                passwordTextField.setText("");
+            }
         }
         else
         {
@@ -139,11 +175,17 @@ public class LoginUI extends javax.swing.JFrame {
     private void createNewUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewUserButtonActionPerformed
         WindowManager.GetWin(WindowManager.WINDOWS.CREATEUSER).setVisible(true);
         this.setVisible(false);
+        usernameTextField.setText("");
+        passwordTextField.setText("");
     }//GEN-LAST:event_createNewUserButtonActionPerformed
 
     private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordTextFieldActionPerformed
+
+    private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginButtonKeyPressed
+
+    }//GEN-LAST:event_loginButtonKeyPressed
 
     /**
      * @param args the command line arguments

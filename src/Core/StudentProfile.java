@@ -32,6 +32,11 @@ public class StudentProfile extends Profile implements Serializable {
         return HomeworkAssignments;
     }  
     
+    public HomeworkAssignment getHomeworkAssignment(int assignmentNumber)
+    {
+        return HomeworkAssignments.get(assignmentNumber);
+    }
+    
     public String getTeacherUsername()
     {
         return teacherUsername;
@@ -42,10 +47,20 @@ public class StudentProfile extends Profile implements Serializable {
         return statistics;
     }
     
-    public Response synchronizeAndGenerateHomeworkAssignments(TeacherProfile teacher)
+    public Response synchronizeAndGenerateHomeworkAssignments()
     {
-        if(this.teacherUsername.equals(teacher.username) == false) return new Response(false, "The provided teacher does not match the student's stored teacher.");
-        
+        ProfileRepository profiles = new ProfileRepository();
+        Response loadProfilesResponse = profiles.loadProfiles();
+        TeacherProfile teacher = profiles.getTeacher(this.teacherUsername);
+        if(loadProfilesResponse.success == false)
+        {
+            return new Response(false, "Failed to load profiles. " + loadProfilesResponse.failureMessage);
+        }
+        if(profiles.teacherExists(teacher.username) == false)
+        {
+            return new Response(false, "That teacher does not exist.");
+        }
+  
         //Remove any assignments that the student has but the teacher hasn't assigned
         Iterator studentKeySetIterator = this.HomeworkAssignments.keySet().iterator();
         while(studentKeySetIterator.hasNext())

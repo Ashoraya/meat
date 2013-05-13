@@ -10,6 +10,9 @@
  */
 package GUI;
 
+import Core.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ashoraya
@@ -42,6 +45,8 @@ public class StudyUI extends javax.swing.JFrame {
         logoutButton = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MEAT - Practice Problems");
+        setResizable(false);
 
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
@@ -77,13 +82,13 @@ public class StudyUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(157, 157, 157)
+                .addGap(170, 170, 170)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(additionCheckBox)
                     .addComponent(subtractionCheckBox)
                     .addComponent(multiplicationCheckBox)
                     .addComponent(divisionCheckBox))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -96,7 +101,7 @@ public class StudyUI extends javax.swing.JFrame {
                 .addComponent(multiplicationCheckBox)
                 .addGap(18, 18, 18)
                 .addComponent(divisionCheckBox)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Options");
@@ -137,17 +142,31 @@ public class StudyUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-456)/2, (screenSize.height-478)/2, 456, 478);
+        setSize(new java.awt.Dimension(456, 478));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        WindowManager.GetWin(WindowManager.WINDOWS.STUDYPROBLEMS).setVisible(true);
-        this.setVisible(false);
+        if(!additionCheckBox.isSelected() && 
+           !subtractionCheckBox.isSelected() && 
+           !multiplicationCheckBox.isSelected() && 
+           !divisionCheckBox.isSelected())
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one problem type.");
+        }
+        else
+        {
+            StudyProblemManager.instance.add = additionCheckBox.isSelected();
+            StudyProblemManager.instance.sub = subtractionCheckBox.isSelected();
+            StudyProblemManager.instance.mul = multiplicationCheckBox.isSelected();
+            StudyProblemManager.instance.div = divisionCheckBox.isSelected();
+            WindowManager.GetWin(WindowManager.WINDOWS.STUDYPROBLEMS).setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        WindowManager.GetWin(WindowManager.WINDOWS.MAINSCREEN).setVisible(true);
+        WindowManager.GetWin(WindowManager.WINDOWS.STUDENTMAINMENU).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_backButtonActionPerformed
 

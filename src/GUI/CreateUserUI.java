@@ -63,6 +63,7 @@ public class CreateUserUI extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MEAT - Create New User");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         usernameTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -145,8 +146,8 @@ public class CreateUserUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-462)/2, (screenSize.height-391)/2, 462, 391);
+        setSize(new java.awt.Dimension(462, 391));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -182,48 +183,58 @@ public class CreateUserUI extends javax.swing.JFrame {
     private void createAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountButtonActionPerformed
         if(this.profileTypeComboBox.getSelectedItem() == "Student")
         {
-            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name");
-            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name");
-            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username");
-            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password");
-            else if(this.teacherUsernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your teacher's username");
-            else if(this.profiles.teacherExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken");
-            else if(profiles.teacherExists(this.teacherUsernameTextField.getText()) == false) JOptionPane.showMessageDialog(this, "We couldn't find that teacher username. Please talk with your teacher to find his/her username");
+            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name.");
+            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name.");
+            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username.");
+            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password.");
+            else if(this.teacherUsernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your teacher's username.");
+            else if(this.profiles.teacherExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken.");
+            else if(profiles.teacherExists(this.teacherUsernameTextField.getText()) == false) JOptionPane.showMessageDialog(this, "We couldn't find that teacher username. Please talk with your teacher to find his/her username.");
             else
             {
                 String password = new String(this.passwordTextField.getPassword());
-                System.out.println("The user was created with the password: " + password);
                 StudentProfile Student = new StudentProfile(this.firstNameTextField.getText(), this.lastNameTextField.getText(), this.teacherUsernameTextField.getText(), this.usernameTextField.getText(), password);
-                System.out.println("The password gathered from the newly created student account is: " + Student.password);
                 Response addStudentResponse = this.profiles.addStudent(Student);
-                if((addStudentResponse.success == false)) JOptionPane.showMessageDialog(this, "That username has already been taken");
+                if((addStudentResponse.success == false)) JOptionPane.showMessageDialog(this, "That username has already been taken.");
                 else
                 {
                     this.profiles.storeProfiles();
                     WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
                     this.setVisible(false);
+                    JOptionPane.showMessageDialog(WindowManager.GetWin(WindowManager.WINDOWS.LOGIN), "Account successfully created.");
+                    firstNameTextField.setText("");
+                    lastNameTextField.setText("");
+                    usernameTextField.setText("");
+                    passwordTextField.setText("");
+                    teacherUsernameTextField.setText("");
                 }
             }
         }
         
         else if(this.profileTypeComboBox.getSelectedItem() == "Teacher")
         {
-            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name");
-            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name");
-            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username");
-            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password");
-            else if(this.profiles.studentExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken");
+            if(this.firstNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your first name.");
+            else if(this.lastNameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter your last name.");
+            else if(this.usernameTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a username.");
+            else if(this.passwordTextField.getText().equals("")) JOptionPane.showMessageDialog(this, "Please enter a password.");
+            else if(this.profiles.studentExists(this.usernameTextField.getText()) == true) JOptionPane.showMessageDialog(this, "That username has already been taken.");
             else
             {
                 String password = new String(this.passwordTextField.getPassword());
                 TeacherProfile Teacher = new TeacherProfile(this.firstNameTextField.getText(), this.lastNameTextField.getText(), this.usernameTextField.getText(), password);
                 Response addTeacherResponse = this.profiles.addTeacher(Teacher);
-                if(addTeacherResponse.success == false) JOptionPane.showMessageDialog(this, "That username has already been taken");
+                if(addTeacherResponse.success == false) JOptionPane.showMessageDialog(this, "That username has already been taken.");
                 else
                 {
                     this.profiles.storeProfiles();
                     WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
                     this.setVisible(false);
+                    JOptionPane.showMessageDialog(WindowManager.GetWin(WindowManager.WINDOWS.LOGIN), "Account successfully created.");
+                    firstNameTextField.setText("");
+                    lastNameTextField.setText("");
+                    usernameTextField.setText("");
+                    passwordTextField.setText("");
+                    teacherUsernameTextField.setText("");
                 }
             }
         }
@@ -232,6 +243,11 @@ public class CreateUserUI extends javax.swing.JFrame {
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
         this.setVisible(false);
+        firstNameTextField.setText("");
+        lastNameTextField.setText("");
+        usernameTextField.setText("");
+        passwordTextField.setText("");
+        teacherUsernameTextField.setText("");
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**

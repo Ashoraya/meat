@@ -10,7 +10,11 @@
  */
 package GUI;
 
-import Core.ProfileRepository;
+import Core.*;
+import java.awt.event.ComponentEvent;
+import java.util.Iterator;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -18,11 +22,21 @@ import Core.ProfileRepository;
  */
 public class HomeworkUI extends javax.swing.JFrame {
     
-    public ProfileRepository profiles;
+    public Integer assignmentNumber;
 
     /** Creates new form HomeworkUI */
     public HomeworkUI() {
         initComponents();
+        homeworkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+                public void componentHidden(java.awt.event.ComponentEvent evt) 
+                {
+                    HomeworkUIComponentHidden(evt);
+                }
+                public void componentShown(java.awt.event.ComponentEvent evt) {
+                    HomeworkUIComponentShown(evt);
+                }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -36,25 +50,48 @@ public class HomeworkUI extends javax.swing.JFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        homeworkListModel = new javax.swing.DefaultListModel();
+        homeworkList = new javax.swing.JList(homeworkListModel);
         backButton = new javax.swing.JButton();
         startButton = new javax.swing.JButton();
+        jlabel1 = new javax.swing.JLabel();
+        jlabel2 = new javax.swing.JLabel();
+        problemTypesLabel = new javax.swing.JLabel();
+        additionCheckBox = new javax.swing.JCheckBox();
+        subtractionCheckBox = new javax.swing.JCheckBox();
+        multiplicationCheckBox = new javax.swing.JCheckBox();
+        divisionCheckBox = new javax.swing.JCheckBox();
+        numberOfProblemsLabel = new javax.swing.JLabel();
+        numberOfCompletedProblemsLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        scoreLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutButton = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MEAT - Homework Assignments");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Homework List"));
+
+        homeworkList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                homeworkListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(homeworkList);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 190, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
         );
 
         backButton.setText("Back");
@@ -70,6 +107,47 @@ public class HomeworkUI extends javax.swing.JFrame {
                 startButtonActionPerformed(evt);
             }
         });
+
+        jlabel1.setText("Number of problems:");
+
+        jlabel2.setText("Number of completed problems:");
+
+        problemTypesLabel.setText("Problem types:");
+
+        additionCheckBox.setText("Addition");
+        additionCheckBox.setEnabled(false);
+        additionCheckBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                additionCheckBoxMouseClicked(evt);
+            }
+        });
+        additionCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                additionCheckBoxStateChanged(evt);
+            }
+        });
+        additionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                additionCheckBoxActionPerformed(evt);
+            }
+        });
+
+        subtractionCheckBox.setText("Subtraction");
+        subtractionCheckBox.setEnabled(false);
+
+        multiplicationCheckBox.setText("Multiplication");
+        multiplicationCheckBox.setEnabled(false);
+
+        divisionCheckBox.setText("Division");
+        divisionCheckBox.setEnabled(false);
+
+        numberOfProblemsLabel.setText("0");
+
+        numberOfCompletedProblemsLabel.setText("0");
+
+        jLabel1.setText("Score:");
+
+        scoreLabel.setText("Incomplete");
 
         jMenu1.setText("Options");
 
@@ -92,41 +170,175 @@ public class HomeworkUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(backButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
-                .addComponent(startButton)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
+                        .addComponent(startButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numberOfProblemsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numberOfCompletedProblemsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(problemTypesLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(additionCheckBox)
+                                .addGap(45, 45, 45)
+                                .addComponent(subtractionCheckBox))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(multiplicationCheckBox)
+                                .addGap(23, 23, 23)
+                                .addComponent(divisionCheckBox))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scoreLabel)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(387, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlabel1)
+                    .addComponent(numberOfProblemsLabel))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlabel2)
+                    .addComponent(numberOfCompletedProblemsLabel))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(scoreLabel))
+                .addGap(18, 18, 18)
+                .addComponent(problemTypesLabel)
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(additionCheckBox)
+                    .addComponent(subtractionCheckBox))
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(multiplicationCheckBox)
+                    .addComponent(divisionCheckBox))
+                .addGap(158, 158, 158)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(backButton)
-                    .addComponent(startButton))
-                .addContainerGap())
+                    .addComponent(startButton)))
         );
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-651)/2, (screenSize.height-480)/2, 651, 480);
+        setSize(new java.awt.Dimension(651, 480));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void HomeworkUIComponentShown(ComponentEvent evt) {
+        homeworkListModel.removeAllElements();
+        StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+        System.out.println("Entering synchronize function.");
+        student.synchronizeAndGenerateHomeworkAssignments();
+        for(Integer key : student.HomeworkAssignments.keySet())
+        {
+            homeworkListModel.addElement("Homework " + student.HomeworkAssignments.get(key).assignmentNumber);
+            System.out.println("Synchronizing.");
+        }
+        System.out.println("End of synchronizing for loop.");
+        homeworkList.setSelectedIndex(0);
+        UserManager.instance.updateAndSaveStudentUser(student);
+    }
+    
+    private void HomeworkUIComponentHidden(ComponentEvent evt) {
+            
+        }
+    
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        WindowManager.GetWin(WindowManager.WINDOWS.MAINSCREEN).setVisible(true);
+        WindowManager.GetWin(WindowManager.WINDOWS.STUDENTMAINMENU).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        WindowManager.GetWin(WindowManager.WINDOWS.HOMEWORKPROBLEMS).setVisible(true);
-        this.setVisible(false);
+        int currentProblem, numOfProblems;
+        StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+        currentProblem = student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem;
+        numOfProblems = student.HomeworkAssignments.get(assignmentNumber).numOfProblems;
+        if(currentProblem >= numOfProblems)
+        {
+            JOptionPane.showMessageDialog(this, "That assignment has already been completed");
+        }
+        else
+        {
+            WindowManager.GetWin(WindowManager.WINDOWS.HOMEWORKPROBLEMS).setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         WindowManager.GetWin(WindowManager.WINDOWS.LOGIN).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void homeworkListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_homeworkListValueChanged
+        //Only execute this code if something in the homework list is selected
+        if(homeworkList.isSelectionEmpty() == false){
+            //Set the selected state of all homework assignemnts to false
+            StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+            
+            Iterator iter = student.HomeworkAssignments.keySet().iterator();
+            while(iter.hasNext())
+            {
+                System.out.println(student.HomeworkAssignments.get((Integer)iter.next()).isSelected);
+            }
+            
+            
+            Iterator studentHomeworkAssignmentIterator = student.HomeworkAssignments.keySet().iterator();
+            while(studentHomeworkAssignmentIterator.hasNext())
+            {
+                student.HomeworkAssignments.get((Integer)studentHomeworkAssignmentIterator.next()).isSelected = false;
+            }
+            
+            int index = homeworkList.getSelectedIndex();
+            String selectedElementString = (String)homeworkListModel.getElementAt(index);
+            assignmentNumber = Integer.parseInt(selectedElementString.substring(selectedElementString.lastIndexOf(" ")+1));
+            System.out.println(assignmentNumber);
+            HomeworkAssignment assignment = student.getHomeworkAssignment(assignmentNumber);
+            
+            //Set the selected state of currently selected homework assignment to true
+            assignment.isSelected = true;
+            numberOfProblemsLabel.setText(Integer.toString(assignment.numOfProblems));
+            numberOfCompletedProblemsLabel.setText(Integer.toString(assignment.numOfCompletedProblems));
+            if(assignment.numOfCompletedProblems < assignment.numOfProblems)
+            {
+                scoreLabel.setText("Incomplete");
+            }
+            else
+            {
+                scoreLabel.setText(Integer.toString(assignment.numOfCorrectProblems) + "/" + assignment.numOfProblems);
+            }
+            additionCheckBox.setSelected(assignment.add);
+            subtractionCheckBox.setSelected(assignment.sub);
+            multiplicationCheckBox.setSelected(assignment.mul);
+            divisionCheckBox.setSelected(assignment.div);
+            UserManager.instance.updateAndSaveStudentUser(student);
+        }
+    }//GEN-LAST:event_homeworkListValueChanged
+
+    private void additionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_additionCheckBoxActionPerformed
+
+    }//GEN-LAST:event_additionCheckBoxActionPerformed
+
+    private void additionCheckBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_additionCheckBoxMouseClicked
+
+    }//GEN-LAST:event_additionCheckBoxMouseClicked
+
+    private void additionCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_additionCheckBoxStateChanged
+
+    }//GEN-LAST:event_additionCheckBoxStateChanged
 
     /**
      * @param args the command line arguments
@@ -164,12 +376,26 @@ public class HomeworkUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox additionCheckBox;
     private javax.swing.JButton backButton;
+    private javax.swing.JCheckBox divisionCheckBox;
+    public javax.swing.DefaultListModel homeworkListModel;
+    public javax.swing.JList homeworkList;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jlabel1;
+    private javax.swing.JLabel jlabel2;
     private javax.swing.JMenuItem logoutButton;
+    private javax.swing.JCheckBox multiplicationCheckBox;
+    private javax.swing.JLabel numberOfCompletedProblemsLabel;
+    private javax.swing.JLabel numberOfProblemsLabel;
+    private javax.swing.JLabel problemTypesLabel;
+    private javax.swing.JLabel scoreLabel;
     private javax.swing.JButton startButton;
+    private javax.swing.JCheckBox subtractionCheckBox;
     // End of variables declaration//GEN-END:variables
 }

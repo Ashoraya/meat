@@ -16,6 +16,7 @@ public class HomeworkAssignment implements Serializable {
     public boolean add, sub, mul, div;
     public int assignmentNumber;
     public int numOfProblems = 0;
+    public int numOfCorrectProblems = 0;
     public int numOfAdditionProblems = 0;
     public int numOfSubtractionProblems = 0;
     public int numOfMultiplicationProblems = 0;
@@ -27,7 +28,9 @@ public class HomeworkAssignment implements Serializable {
     public int numOfCompletedProblems = 0;
     public int minOperand = 0;
     public int maxOperand = 0;
+    public int currentHomeworkProblem = 0;
     public boolean isGenerated = false;
+    public boolean isSelected = false;
     public HashMap<Integer, HomeworkProblem> HomeworkProblems;
     
     public HomeworkAssignment()
@@ -39,6 +42,8 @@ public class HomeworkAssignment implements Serializable {
     {
         this.assignmentNumber = assignmentNumber;
         this.numOfProblems = numOfProblems;
+        this.minOperand = minOperand;
+        this.maxOperand = maxOperand;
         this.add = add;
         this.sub = sub;
         this.mul = mul;

@@ -11,9 +11,9 @@ import java.util.Random;
  * @author Ashoraya
  */
 public class HomeworkProblem implements Serializable {
-    private int leftOperand, rightOperand, correctAnswer, problemNumber;
-    private Operator operator;
-    private boolean isGenerated = false;
+    public int leftOperand, rightOperand, correctAnswer, problemNumber;
+    public Operator operator;
+    public boolean isGenerated = false;
     
     public int getLeftOperand()
     {
@@ -50,8 +50,18 @@ public class HomeworkProblem implements Serializable {
         Random rand = new Random();
         this.operator = operator;
         this.problemNumber = problemNumber;
-        this.leftOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
-        this.rightOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
+        if(operator == Operator.DIVIDE)
+        {
+            do {
+                this.leftOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
+                this.rightOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
+            } while(this.leftOperand % this.rightOperand != 0);
+        }
+        else
+        {
+            this.leftOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
+            this.rightOperand = rand.nextInt(maxOperandValue - minOperandValue + 1) + minOperandValue;
+        }
         switch(operator)
         {
             case ADD:
@@ -67,10 +77,6 @@ public class HomeworkProblem implements Serializable {
                 this.correctAnswer = this.leftOperand / this.rightOperand;
                 break;
         }
-        System.out.println(this.leftOperand);
-        System.out.println(this.operator.name());
-        System.out.println(this.rightOperand);
-        System.out.println(this.correctAnswer);
         this.isGenerated = true;
     }
     

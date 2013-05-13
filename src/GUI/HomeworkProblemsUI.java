@@ -9,12 +9,13 @@
  * Created on Apr 5, 2013, 10:22:00 PM
  */
 package GUI;
-import Core.HomeworkAssignment;
-import Core.HomeworkProblem;
-import Core.Operator;
-import Core.ProfileRepository;
+import Core.*;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ComponentEvent;
+import java.text.DecimalFormat;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,59 +23,34 @@ import java.util.Random;
  */
 public class HomeworkProblemsUI extends javax.swing.JFrame {
     
-    public ProfileRepository profiles;
+    public Integer assignmentNumber = null;
+    public Integer correctAnswerButton = null;
+    public Integer selectedAnswerButton = null;
+    public Operator operator = null;
 
     /** Creates new form HomeworkProblemsUI */
     public HomeworkProblemsUI() {
         initComponents();
+        saveAndQuitButton.setVisible(true);
+        nextButton.setVisible(false);
         questionLabel.setFont(new Font("Serif", Font.PLAIN, 32));
         answerOneButton.setFont(new Font("Serif", Font.PLAIN, 32));
         answerTwoButton.setFont(new Font("Serif", Font.PLAIN, 32));
         answerThreeButton.setFont(new Font("Serif", Font.PLAIN, 32));
         answerFourButton.setFont(new Font("Serif", Font.PLAIN, 32));
-        Random rand = new Random();
-        HomeworkAssignment assignment = new HomeworkAssignment();
-        assignment.createHomeworkAssignment(1, 10, 0, 12, true, false, true, false);
-        assignment.generateRandomHomeworkProblems();
-        HomeworkProblem problem = assignment.getHomeworkProblems().get(0);
-        int correctAnswerButton = rand.nextInt(4) + 1;
-        switch(correctAnswerButton)
-        {
-            case 1:
-                answerOneButton.setText(Integer.toString(problem.getCorrectAnswer()));
-                break;
-            case 2:
-                answerTwoButton.setText(Integer.toString(problem.getCorrectAnswer()));
-                break;
-            case 3:
-                answerThreeButton.setText(Integer.toString(problem.getCorrectAnswer()));
-                break;
-            case 4:
-                answerFourButton.setText(Integer.toString(problem.getCorrectAnswer()));
-                break;
-        }
-        
-        Operator operator = problem.getOperator();
-        switch(operator)
-        {
-            case ADD:
-                //this.operator.setText("+");
-                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " + " + Integer.toString(problem.getRightOperand()) + " = ?");
-                break;
-            case SUBTRACT:
-                //this.operator.setText("-");
-                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " - " + Integer.toString(problem.getRightOperand()) + " = ?");
-                break;
-            case MULTIPLY:
-                //this.operator.setText("*");
-                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " * " + Integer.toString(problem.getRightOperand()) + " = ?");
-                break;
-            case DIVIDE:
-                //this.operator.setText("/");
-                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " \u00F7 " + Integer.toString(problem.getRightOperand()) + " = ?");
-                break;
-        }
-        //jPanel1.setText("Test");
+        answerOneLabel.setVisible(false);
+        answerTwoLabel.setVisible(false);
+        answerThreeLabel.setVisible(false);
+        answerFourLabel.setVisible(false);
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+                public void componentHidden(java.awt.event.ComponentEvent evt) 
+                {
+                    //componentHidden(evt);
+                }
+                public void componentShown(java.awt.event.ComponentEvent evt) {
+                    HomeworkProblemsUIComponentShown(evt);
+                }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -87,41 +63,72 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        textBookButton = new javax.swing.JButton();
+        currentProblemLabel = new javax.swing.JLabel();
+        currentGradeLabel = new javax.swing.JLabel();
+        hintButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
-        previousButton = new javax.swing.JButton();
         saveAndQuitButton = new javax.swing.JButton();
         questionLabel = new javax.swing.JLabel();
-        answerTwoButton = new javax.swing.JButton();
-        answerFourButton = new javax.swing.JButton();
-        answerOneButton = new javax.swing.JButton();
-        answerThreeButton = new javax.swing.JButton();
+        submitButton = new javax.swing.JButton();
+        answerOneButton = new javax.swing.JToggleButton();
+        answerTwoButton = new javax.swing.JToggleButton();
+        answerThreeButton = new javax.swing.JToggleButton();
+        answerFourButton = new javax.swing.JToggleButton();
+        answerOneLabel = new javax.swing.JLabel();
+        answerTwoLabel = new javax.swing.JLabel();
+        answerThreeLabel = new javax.swing.JLabel();
+        answerFourLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutButton = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setTitle("MEAT - Homework Assignment");
+        setResizable(false);
+        getContentPane().setLayout(null);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Homework"));
+        jPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                jPanel1ComponentHidden(evt);
+            }
+        });
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 170, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 373, Short.MAX_VALUE)
-        );
+        textBookButton.setText("Textbook");
+        textBookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textBookButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(textBookButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(45, 298, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        currentProblemLabel.setText("Current Problem:");
+        jPanel1.add(currentProblemLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 27, 150, -1));
+
+        currentGradeLabel.setText("Current Grade:");
+        jPanel1.add(currentGradeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 59, 150, -1));
+
+        hintButton.setText("Hint");
+        hintButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hintButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(hintButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(45, 339, 77, -1));
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(0, 0, 180, 390);
 
         nextButton.setText("Next");
-        getContentPane().add(nextButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, -1, -1));
-
-        previousButton.setText("Previous");
-        getContentPane().add(previousButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, -1, -1));
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(nextButton);
+        nextButton.setBounds(420, 350, 70, 30);
 
         saveAndQuitButton.setText("Save and Quit");
         saveAndQuitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -129,10 +136,30 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
                 saveAndQuitButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(saveAndQuitButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 350, -1, -1));
+        getContentPane().add(saveAndQuitButton);
+        saveAndQuitButton.setBounds(200, 350, 120, 30);
 
         questionLabel.setText("question");
-        getContentPane().add(questionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, -1, -1));
+        getContentPane().add(questionLabel);
+        questionLabel.setBounds(290, 20, 160, 50);
+
+        submitButton.setText("Submit");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(submitButton);
+        submitButton.setBounds(410, 350, 80, 30);
+
+        answerOneButton.setText("answerOne");
+        answerOneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerOneButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(answerOneButton);
+        answerOneButton.setBounds(230, 100, 90, 70);
 
         answerTwoButton.setText("answerTwo");
         answerTwoButton.addActionListener(new java.awt.event.ActionListener() {
@@ -140,16 +167,42 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
                 answerTwoButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(answerTwoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 100, 90, 70));
-
-        answerFourButton.setText("answerFour");
-        getContentPane().add(answerFourButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 90, 70));
-
-        answerOneButton.setText("answerOne");
-        getContentPane().add(answerOneButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 90, 70));
+        getContentPane().add(answerTwoButton);
+        answerTwoButton.setBounds(380, 100, 90, 70);
 
         answerThreeButton.setText("answerThree");
-        getContentPane().add(answerThreeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 210, 90, 70));
+        answerThreeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerThreeButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(answerThreeButton);
+        answerThreeButton.setBounds(230, 210, 90, 70);
+
+        answerFourButton.setText("answerFour");
+        answerFourButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerFourButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(answerFourButton);
+        answerFourButton.setBounds(380, 210, 90, 70);
+
+        answerOneLabel.setText("jLabel1");
+        getContentPane().add(answerOneLabel);
+        answerOneLabel.setBounds(250, 80, 110, 14);
+
+        answerTwoLabel.setText("jLabel2");
+        getContentPane().add(answerTwoLabel);
+        answerTwoLabel.setBounds(400, 80, 100, 14);
+
+        answerThreeLabel.setText("jLabel3");
+        getContentPane().add(answerThreeLabel);
+        answerThreeLabel.setBounds(250, 190, 100, 14);
+
+        answerFourLabel.setText("jLabel4");
+        getContentPane().add(answerFourLabel);
+        answerFourLabel.setBounds(400, 190, 100, 14);
 
         jMenu1.setText("Options");
 
@@ -166,11 +219,123 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-522)/2, (screenSize.height-448)/2, 522, 448);
+        setSize(new java.awt.Dimension(529, 456));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void HomeworkProblemsUIComponentShown(ComponentEvent evt) {
+        int correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3, wrongAnswer4;
+        int currentHomeworkProblem, numOfProblems, numOfCorrectProblems;
+        double gradePercent;
+        
+        //Display the submit button and hide the next button.
+        saveAndQuitButton.setVisible(true);
+        nextButton.setVisible(false);
+        submitButton.setVisible(true);
+        
+        //Get the selected homework assignment assignment number and current homework problem
+        StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+        for (Integer key : student.HomeworkAssignments.keySet()) {
+            if(student.HomeworkAssignments.get(key).isSelected == true)
+            {
+                this.assignmentNumber = student.HomeworkAssignments.get(key).assignmentNumber;
+            }
+        }
+        currentHomeworkProblem = student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem;
+        
+        //Set the title of the homework info border
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Homework " + Integer.toString(assignmentNumber)));
+        
+        //If this is the last homework problem, disable the next button and return
+        if(currentHomeworkProblem == student.HomeworkAssignments.get(assignmentNumber).numOfProblems)
+        {
+            nextButton.setVisible(false);
+            return;
+        }
+        
+        //Display the question
+        HomeworkProblem problem = student.HomeworkAssignments.get(assignmentNumber).HomeworkProblems.get(currentHomeworkProblem);
+        this.operator = problem.getOperator();
+        switch(operator)
+        {
+            case ADD:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " + " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case SUBTRACT:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " - " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case MULTIPLY:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " x " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case DIVIDE:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " \u00F7 " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+        }
+        
+        //Get the correct answer and generate the wrong answers
+        correctAnswer = student.HomeworkAssignments.get(assignmentNumber).HomeworkProblems.get(currentHomeworkProblem).correctAnswer;
+        wrongAnswer1 = correctAnswer + 3;
+        wrongAnswer2 = correctAnswer - 3;
+        wrongAnswer3 = correctAnswer + 2;
+        wrongAnswer4 = correctAnswer - 1;
+        
+        //Set the correct answer button
+        Random rand = new Random();
+        correctAnswerButton = rand.nextInt(4) + 1;
+        switch(correctAnswerButton)
+        {
+            case 1:
+                answerOneButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 2:
+                answerTwoButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 3:
+                answerThreeButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 4:
+                answerFourButton.setText(Integer.toString(correctAnswer));
+                break;
+        }
+        
+        //Set the wrong answer buttons
+        for(int i = 1; i <= 4; i++)
+        {
+            if(i == correctAnswerButton) continue;
+            switch(i)
+            {
+                case 1:
+                    answerOneButton.setText(Integer.toString(wrongAnswer1));
+                    break;
+                case 2:
+                    answerTwoButton.setText(Integer.toString(wrongAnswer2));
+                    break;
+                case 3:
+                    answerThreeButton.setText(Integer.toString(wrongAnswer3));
+                    break;
+                case 4:
+                    answerFourButton.setText(Integer.toString(wrongAnswer4));
+                    break;
+            }
+        }
+        
+        //Set the current problem and current grade labels
+        numOfProblems = student.HomeworkAssignments.get(assignmentNumber).numOfProblems;
+        numOfCorrectProblems = student.HomeworkAssignments.get(assignmentNumber).numOfCorrectProblems;
+        DecimalFormat format = new DecimalFormat("#0.0");
+        gradePercent = gradePercent = ((double)numOfCorrectProblems/((double)currentHomeworkProblem ))*100;
+        currentProblemLabel.setText("Current Problem: " + Integer.toString(currentHomeworkProblem + 1) + "/" + Integer.toString(numOfProblems));
+        currentGradeLabel.setText("Current Grade: " + format.format(gradePercent) + "%");
+    }
     private void saveAndQuitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAndQuitButtonActionPerformed
+        answerOneButton.setSelected(false);
+        answerTwoButton.setSelected(false);
+        answerThreeButton.setSelected(false);
+        answerFourButton.setSelected(false);
+        answerOneLabel.setVisible(false);
+        answerTwoLabel.setVisible(false);
+        answerThreeLabel.setVisible(false);
+        answerFourLabel.setVisible(false);
         WindowManager.GetWin(WindowManager.WINDOWS.HOMEWORK).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_saveAndQuitButtonActionPerformed
@@ -180,9 +345,308 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void textBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBookButtonActionPerformed
+        WindowManager.GetWin(WindowManager.WINDOWS.TEXTBOOK).setVisible(true);
+    }//GEN-LAST:event_textBookButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        int correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3, wrongAnswer4;
+        int currentHomeworkProblem, numOfProblems, numOfCorrectProblems;
+        double gradePercent;
+        
+        //Set all answer labels to be invisible
+        answerOneLabel.setVisible(false);
+        answerTwoLabel.setVisible(false);
+        answerThreeLabel.setVisible(false);
+        answerFourLabel.setVisible(false);
+        
+        //Get the selected homework assignment assignment number and current homework problem
+        StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+        for (Integer key : student.HomeworkAssignments.keySet()) {
+            if(student.HomeworkAssignments.get(key).isSelected == true)
+            {
+                this.assignmentNumber = student.HomeworkAssignments.get(key).assignmentNumber;
+            }
+        }
+        currentHomeworkProblem = student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem;
+        
+        //Set the current problem label
+        numOfProblems = student.HomeworkAssignments.get(assignmentNumber).numOfProblems;
+        numOfCorrectProblems = student.HomeworkAssignments.get(assignmentNumber).numOfCorrectProblems;
+        currentProblemLabel.setText("Current Problem: " + Integer.toString(currentHomeworkProblem + 1) + "/" + Integer.toString(numOfProblems));
+        
+        //Display the question
+        HomeworkProblem problem = student.HomeworkAssignments.get(assignmentNumber).HomeworkProblems.get(currentHomeworkProblem);
+        this.operator = problem.getOperator();
+        switch(operator)
+        {
+            case ADD:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " + " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case SUBTRACT:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " - " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case MULTIPLY:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " x " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+            case DIVIDE:
+                this.questionLabel.setText(Integer.toString(problem.getLeftOperand()) + " \u00F7 " + Integer.toString(problem.getRightOperand()) + " = ?");
+                break;
+        }
+        
+        //Get the correct answer and generate the wrong answers
+        correctAnswer = student.HomeworkAssignments.get(assignmentNumber).HomeworkProblems.get(currentHomeworkProblem).correctAnswer;
+        wrongAnswer1 = correctAnswer + 3;
+        wrongAnswer2 = correctAnswer - 3;
+        wrongAnswer3 = correctAnswer + 2;
+        wrongAnswer4 = correctAnswer - 1;
+        
+        //Set the correct answer button
+        Random rand = new Random();
+        correctAnswerButton = rand.nextInt(4) + 1;
+        switch(correctAnswerButton)
+        {
+            case 1:
+                answerOneButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 2:
+                answerTwoButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 3:
+                answerThreeButton.setText(Integer.toString(correctAnswer));
+                break;
+            case 4:
+                answerFourButton.setText(Integer.toString(correctAnswer));
+                break;
+        }
+        
+        //Set the wrong answer buttons
+        for(int i = 1; i <= 4; i++)
+        {
+            if(i == correctAnswerButton) continue;
+            switch(i)
+            {
+                case 1:
+                    answerOneButton.setText(Integer.toString(wrongAnswer1));
+                    break;
+                case 2:
+                    answerTwoButton.setText(Integer.toString(wrongAnswer2));
+                    break;
+                case 3:
+                    answerThreeButton.setText(Integer.toString(wrongAnswer3));
+                    break;
+                case 4:
+                    answerFourButton.setText(Integer.toString(wrongAnswer4));
+                    break;
+            }
+        }
+        
+        //Display the submit button and disable the next button
+        nextButton.setVisible(false);
+        submitButton.setVisible(true);
+        
+        //Deselect all answer buttons and set the currently selected problem to null
+        selectedAnswerButton = null;
+        answerOneButton.setSelected(false);
+        answerTwoButton.setSelected(false);
+        answerThreeButton.setSelected(false);
+        answerFourButton.setSelected(false);
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        StudentProfile student = UserManager.instance.getCurrentUserAsStudentProfile();
+        int currentProblem, numOfProblems, numOfCorrectProblems, currentHomeworkProblem;
+        double gradePercent;
+        if(selectedAnswerButton == null)
+        {
+            JOptionPane.showMessageDialog(this, "Please select an answer and try again.");
+            return;
+        }
+        else if(selectedAnswerButton == correctAnswerButton)
+        {
+            switch(operator)
+            {
+                case ADD:
+                    student.HomeworkAssignments.get(this.assignmentNumber).numOfCorrectAdditionAnswers++;
+                    break;
+                case SUBTRACT:
+                    student.HomeworkAssignments.get(this.assignmentNumber).numOfCorrectSubtractionAnswers++;
+                    break;
+                case MULTIPLY:
+                    student.HomeworkAssignments.get(this.assignmentNumber).numOfCorrectMultiplicationAnswers++;
+                    break;
+                case DIVIDE:
+                    student.HomeworkAssignments.get(this.assignmentNumber).numOfCorrectDivisionAnswers++;
+                    break;
+            }
+            student.HomeworkAssignments.get(this.assignmentNumber).numOfCorrectProblems++;
+            student.HomeworkAssignments.get(this.assignmentNumber).numOfCompletedProblems++;
+            student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem++;
+            UserManager.instance.updateAndSaveStudentUser(student);
+            //JOptionPane.showMessageDialog(this, "Correct!");
+            
+            //Display correct over the user's selected answer
+            Color color = new Color(0, 100, 0);
+            switch(selectedAnswerButton)
+            {
+                case 1:
+                    answerOneLabel.setText("Correct!");
+                    answerOneLabel.setForeground(color);
+                    answerOneLabel.setVisible(true);
+                    break;
+                case 2:
+                    answerTwoLabel.setText("Correct!");
+                    answerTwoLabel.setForeground(color);
+                    answerTwoLabel.setVisible(true);
+                    break;
+                case 3:
+                    answerThreeLabel.setText("Correct!");
+                    answerThreeLabel.setForeground(color);
+                    answerThreeLabel.setVisible(true);
+                    break;
+                case 4:
+                    answerFourLabel.setText("Correct!");
+                    answerFourLabel.setForeground(color);
+                    answerFourLabel.setVisible(true);
+                    break;
+            }
+        }
+        else
+        {
+            student.HomeworkAssignments.get(this.assignmentNumber).numOfCompletedProblems++;
+            student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem++;
+            UserManager.instance.updateAndSaveStudentUser(student);
+            //JOptionPane.showMessageDialog(this, "Incorrect.");
+            
+            //Display incorrect over the user's selected answer
+            Color color = new Color(139, 0, 0);
+            switch(this.selectedAnswerButton)
+            {
+                case 1:
+                    answerOneLabel.setText("Incorrect");
+                    answerOneLabel.setForeground(color);
+                    answerOneLabel.setVisible(true);
+                    break;
+                case 2:
+                    answerTwoLabel.setText("Incorrect");
+                    answerTwoLabel.setForeground(color);
+                    answerTwoLabel.setVisible(true);
+                    break;
+                case 3:
+                    answerThreeLabel.setText("Incorrect");
+                    answerThreeLabel.setForeground(color);
+                    answerThreeLabel.setVisible(true);
+                    break;
+                case 4:
+                    answerFourLabel.setText("Incorrect");
+                    answerFourLabel.setForeground(color);
+                    answerFourLabel.setVisible(true);
+                    break;
+            }
+            
+            //Let the user know what the correct answer was
+            color = new Color(0, 0, 100);
+            switch(this.correctAnswerButton)
+            {
+                case 1:
+                    answerOneLabel.setText("Correct");
+                    answerOneLabel.setForeground(color);
+                    answerOneLabel.setVisible(true);
+                    break;
+                case 2:
+                    answerTwoLabel.setText("Correct");
+                    answerTwoLabel.setForeground(color);
+                    answerTwoLabel.setVisible(true);
+                    break;
+                case 3:
+                    answerThreeLabel.setText("Correct");
+                    answerThreeLabel.setForeground(color);
+                    answerThreeLabel.setVisible(true);
+                    break;
+                case 4:
+                    answerFourLabel.setText("Correct");
+                    answerFourLabel.setForeground(color);
+                    answerFourLabel.setVisible(true);
+                    break;
+            }
+        }
+        
+        //If we're at the last problem, don't show the next button. Otherwise, make it visible
+        currentHomeworkProblem = student.HomeworkAssignments.get(assignmentNumber).currentHomeworkProblem;
+        numOfProblems = student.HomeworkAssignments.get(assignmentNumber).numOfProblems;
+        if(currentHomeworkProblem < numOfProblems)
+        {
+            submitButton.setVisible(false);
+            nextButton.setVisible(true);
+        }
+        else
+        {
+            submitButton.setVisible(false);
+            nextButton.setVisible(false);
+            JOptionPane.showMessageDialog(this, "Assignment complete!");
+        }
+        
+        //Set the current grade label
+        numOfCorrectProblems = student.HomeworkAssignments.get(assignmentNumber).numOfCorrectProblems;
+        DecimalFormat format = new DecimalFormat("#0.0");
+        gradePercent = ((double)numOfCorrectProblems/((double)currentHomeworkProblem))*100;
+        currentGradeLabel.setText("Current Grade: " + format.format(gradePercent) + "%");
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void answerOneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerOneButtonActionPerformed
+        if(answerOneButton.isSelected() == true) selectedAnswerButton = 1;
+        else selectedAnswerButton = null;
+        answerTwoButton.setSelected(false);
+        answerThreeButton.setSelected(false);
+        answerFourButton.setSelected(false);
+    }//GEN-LAST:event_answerOneButtonActionPerformed
+
     private void answerTwoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerTwoButtonActionPerformed
-        // TODO add your handling code here:
+        if(answerTwoButton.isSelected() == true) selectedAnswerButton = 2;
+        else selectedAnswerButton = null;
+        answerOneButton.setSelected(false);
+        answerThreeButton.setSelected(false);
+        answerFourButton.setSelected(false);
     }//GEN-LAST:event_answerTwoButtonActionPerformed
+
+    private void answerThreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerThreeButtonActionPerformed
+        if(answerThreeButton.isSelected() == true) selectedAnswerButton = 3;
+        else selectedAnswerButton = null;
+        answerOneButton.setSelected(false);
+        answerTwoButton.setSelected(false);
+        answerFourButton.setSelected(false);
+    }//GEN-LAST:event_answerThreeButtonActionPerformed
+
+    private void answerFourButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerFourButtonActionPerformed
+        if(answerFourButton.isSelected() == true) selectedAnswerButton = 4;
+        else selectedAnswerButton = null;
+        answerOneButton.setSelected(false);
+        answerTwoButton.setSelected(false);
+        answerThreeButton.setSelected(false);
+    }//GEN-LAST:event_answerFourButtonActionPerformed
+
+    private void jPanel1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentHidden
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel1ComponentHidden
+
+    private void hintButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintButtonActionPerformed
+        if(this.operator == Operator.ADD) 
+        {
+            WindowManager.GetWin(WindowManager.WINDOWS.ADDITIONHINT).setVisible(true);
+        }
+        else if(this.operator == Operator.SUBTRACT)
+        {
+            WindowManager.GetWin(WindowManager.WINDOWS.SUBTRACTIONHINT).setVisible(true);
+        }
+        else if(this.operator == Operator.MULTIPLY)
+        {
+            WindowManager.GetWin(WindowManager.WINDOWS.MULTIPLICATIONHINT).setVisible(true);
+        }
+        else if(this.operator == Operator.DIVIDE)
+        {
+            WindowManager.GetWin(WindowManager.WINDOWS.DIVISIONHINT).setVisible(true);
+        }
+    }//GEN-LAST:event_hintButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,17 +684,25 @@ public class HomeworkProblemsUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton answerFourButton;
-    private javax.swing.JButton answerOneButton;
-    private javax.swing.JButton answerThreeButton;
-    private javax.swing.JButton answerTwoButton;
+    private javax.swing.JToggleButton answerFourButton;
+    private javax.swing.JLabel answerFourLabel;
+    private javax.swing.JToggleButton answerOneButton;
+    private javax.swing.JLabel answerOneLabel;
+    private javax.swing.JToggleButton answerThreeButton;
+    private javax.swing.JLabel answerThreeLabel;
+    private javax.swing.JToggleButton answerTwoButton;
+    private javax.swing.JLabel answerTwoLabel;
+    private javax.swing.JLabel currentGradeLabel;
+    private javax.swing.JLabel currentProblemLabel;
+    private javax.swing.JButton hintButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem logoutButton;
     private javax.swing.JButton nextButton;
-    private javax.swing.JButton previousButton;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JButton saveAndQuitButton;
+    private javax.swing.JButton submitButton;
+    private javax.swing.JButton textBookButton;
     // End of variables declaration//GEN-END:variables
 }

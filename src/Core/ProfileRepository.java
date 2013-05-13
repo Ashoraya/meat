@@ -119,6 +119,12 @@ public class ProfileRepository implements Serializable {
             // Read an object.
             Object obj = obj_in.readObject();
             
+            //Close the FileInputStream
+            f_in.close();
+            
+            //Close the ObjectInputStream
+            obj_in.close();
+            
             ProfileRepository profiles = (ProfileRepository)obj;
             
             this.Students = profiles.Students;
@@ -155,6 +161,12 @@ public class ProfileRepository implements Serializable {
             // writeObject() method to cause it to be written out
             // to disk.
             obj_out.writeObject(this);
+            
+            //Close the FileOutputStream
+            f_out.close();
+            
+            //Close the ObjectOutputStream
+            obj_out.close();
 
             return new Response(true, "");
         }

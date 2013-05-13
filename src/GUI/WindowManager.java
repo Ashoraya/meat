@@ -31,8 +31,8 @@ public class WindowManager {
         JFrame newWindow;
         switch (win)
         {
-            case MAINSCREEN:
-                newWindow = new MainMenuUI();
+            case STUDENTMAINMENU:
+                newWindow = new StudentMainMenuUI();
                 break;
             case LOGIN:
                 newWindow = new LoginUI();
@@ -52,8 +52,26 @@ public class WindowManager {
             case STUDYPROBLEMS:
                 newWindow = new StudyProblemsUI();
                 break;
-            case ADMIN:
-                newWindow = new LoginUI();
+            case TEXTBOOK:
+                newWindow = new TextbookUI();
+                break;
+            case CREATEHOMEWORK:
+                newWindow = new CreateHomeworkUI();
+                break;
+            case ADDITIONHINT:
+                newWindow = new AdditionHintUI();
+                break;
+            case SUBTRACTIONHINT:
+                newWindow = new SubtractionHintUI();
+                break;
+            case MULTIPLICATIONHINT:
+                newWindow = new MultiplicationHintUI();
+                break;
+            case DIVISIONHINT:
+                newWindow = new DivisionHintUI();
+                break;
+            case STUDENTPROGRESSREPORT:
+                newWindow = new StudentProgressReportUI();
                 break;
             default:
                 newWindow = new LoginUI();
@@ -66,12 +84,18 @@ public class WindowManager {
     {
         LOGIN(0),
         CREATEUSER(1),
-        MAINSCREEN(2),
+        STUDENTMAINMENU(2),
         HOMEWORK(3),
         STUDY(4),
         HOMEWORKPROBLEMS(6),
         STUDYPROBLEMS(7),
-        ADMIN(8);
+        TEXTBOOK(8),
+        ADDITIONHINT(9),
+        SUBTRACTIONHINT(10),
+        MULTIPLICATIONHINT(11),
+        DIVISIONHINT(12),
+        STUDENTPROGRESSREPORT(13),
+        CREATEHOMEWORK(14);
 
         WINDOWS(int id)
         {
